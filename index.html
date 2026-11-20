@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gangadevi Jeyaraj, Senior Agentic AI Engineer</title>
+<meta name="description" content="Gangadevi Jeyaraj is a Senior Agentic AI Engineer who designs, tests and ships AI agents for enterprise work.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2F0F5;
+  --ink:#1C1630;
+  --muted:#5E5672;
+  --plum:#6B1E3C;
+  --cobalt:#2747C9;
+  --mist:#DAD4E3;
+  --card:#FFFFFF;
+  --display:'Bricolage Grotesque',system-ui,sans-serif;
+  --serif:'Newsreader',Georgia,serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--display);font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
+img,video{display:block;max-width:100%}
+button{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--cobalt);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+
+/* ---------- top bar ---------- */
+.bar{display:flex;align-items:center;justify-content:space-between;padding:26px 0}
+.mark{display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:700;font-size:1.05rem;letter-spacing:-.01em}
+.mark i{width:34px;height:34px;border-radius:50%;background:var(--plum);color:var(--paper);display:grid;place-items:center;font-style:normal;font-size:.8rem;font-weight:700;letter-spacing:.02em}
+.bar nav{display:flex;gap:30px;font-size:.98rem}
+.bar nav a{text-decoration:none;color:var(--muted)}
+.bar nav a:hover{color:var(--ink)}
+.bar nav a.talk{color:var(--ink);font-weight:600;border-bottom:2px solid var(--plum);padding-bottom:2px}
+
+/* ---------- hero ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:64px;padding:40px 0 72px;align-items:start}
+.hero h1{font-size:clamp(3rem,7.4vw,6.4rem);font-weight:800;font-variation-settings:"wdth" 88,"opsz" 96;line-height:.92;letter-spacing:-.022em;margin-bottom:30px}
+.hero h1 span{display:block;font-weight:400;font-variation-settings:"wdth" 100,"opsz" 96;letter-spacing:-.02em;font-size:.48em;line-height:1.06;margin-top:.24em;color:var(--ink)}
+.lede{font-family:var(--serif);font-size:1.32rem;line-height:1.55;max-width:34em;color:#2E2742;margin-bottom:34px}
+
+/* agent run: the signature element */
+.run{background:var(--ink);color:#E9E5F2;border-radius:16px;padding:22px 24px 20px;max-width:560px;margin-bottom:30px;position:relative}
+.run h2{font-family:var(--display);font-size:.95rem;font-weight:600;color:#fff;display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:14px}
+.run h2 small{font-weight:400;color:#A69FBC;font-size:.85rem;margin-left:4px}
+.run ol{list-style:none;font-family:var(--mono);font-size:.86rem;line-height:1.5}
+.run.value h2{font-size:1.05rem;margin-bottom:10px}
+.run.value ol{font-family:var(--display);font-size:.98rem;line-height:1.5;color:#CFC9DE}
+.run.value li{padding:11px 0}
+.run.value li b{font-weight:600;color:#fff}
+.run.value li:first-child{border-top:0;padding-top:2px}
+.run.value li:last-child{padding-bottom:2px}
+.run li{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:7px 0;border-top:1px solid rgba(233,229,242,.1)}
+.run li::before{content:"";width:10px;height:10px;margin-top:6px;border-radius:50%;border:2px solid #8C84A6}
+.run li.ok::before{border-color:#7FA0FF;background:#7FA0FF}
+.run li.done{color:#fff}
+.run li.done::before{border-color:#F3B6C9;background:#F3B6C9}
+.run li b{font-weight:500;color:#fff}
+.run li em{font-style:normal;color:#F3B6C9}
+.js .run li{opacity:0;transform:translateY(4px);transition:opacity .35s ease,transform .35s ease}
+.js .run li.in{opacity:1;transform:none}
+.replay{flex:none;background:none;border:0;color:#A69FBC;font:500 .8rem var(--display);cursor:pointer;text-decoration:underline;text-underline-offset:3px;opacity:0;pointer-events:none;transition:opacity .3s}
+.replay.on{opacity:1;pointer-events:auto}
+.replay:hover{color:#fff}
+
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px 26px}
+.btn{display:inline-block;background:var(--plum);color:#fff;text-decoration:none;font-weight:600;padding:15px 26px;border-radius:999px;font-size:1rem;transition:background .2s}
+.btn:hover{background:#561630}
+.textlink{font-weight:600;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px;text-decoration-color:var(--cobalt)}
+.team{margin-top:26px;font-size:.95rem;color:var(--muted);max-width:34em}
+.team strong{color:var(--ink);font-weight:600}
+
+/* photos, shown whole and unedited */
+.photos{position:relative;padding-bottom:30%}
+.photos figure{margin:0}
+.main-photo img{width:100%;height:auto;aspect-ratio:1/1.05;object-fit:cover;object-position:50% 0;border-radius:20px}
+.main-photo figcaption,.side-photo figcaption{font-family:var(--serif);font-style:italic;font-size:.95rem;color:var(--muted);margin-top:10px}
+.side-photo{position:absolute;left:-8%;bottom:0;width:44%;background:var(--paper);padding:10px 10px 0;border-radius:16px;transform:rotate(-3deg);box-shadow:0 18px 40px -18px rgba(28,22,48,.45)}
+.side-photo img{border-radius:10px;width:100%;height:auto}
+.side-photo figcaption{font-size:.85rem;margin:8px 4px 10px;line-height:1.35}
+.main-photo figcaption{text-align:right}
+
+
+/* ---------- education (own section) ---------- */
+.edu-sec{background:var(--paper);border-top:1px solid var(--mist);padding:72px 0}
+.edu-grid{display:grid;grid-template-columns:auto minmax(0,1fr);gap:72px;align-items:center}
+.edu-grid h2{font-size:clamp(2.6rem,5.4vw,4.4rem);font-weight:800;font-variation-settings:"wdth" 88,"opsz" 96;letter-spacing:-.025em;line-height:.95}
+.edu-grid ul{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.edu-card{display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--mist);border-radius:16px;padding:18px 20px 18px 18px}
+.edu-year{font-size:1.5rem;font-weight:800;font-variation-settings:"wdth" 88;letter-spacing:-.01em;color:var(--plum);padding-right:16px;border-right:1px solid var(--mist);line-height:1}
+.edu-body b{display:block;font-size:1.02rem;font-weight:600;line-height:1.3}
+.edu-body span{display:block;font-size:.9rem;color:var(--muted);margin-top:3px}
+@media (max-width:1100px){.edu-grid{grid-template-columns:1fr;gap:28px}}
+@media (max-width:640px){
+  .edu-sec{padding:56px 0}
+  .edu-grid ul{grid-template-columns:1fr;gap:12px}
+  .edu-card{padding:14px 16px}
+  .edu-year{font-size:1.25rem;padding-right:14px}
+}
+/* hero order on small screens: headline, intro, photos, panel, buttons */
+@media (max-width:960px){
+  .hero.hero{row-gap:0}
+  .hero-copy{display:contents}
+  .hero h1{order:1}
+  .hero .lede{order:2}
+  .hero .photos{order:3;margin-bottom:36px}
+  .hero .run{order:4}
+  .hero .actions{order:5}
+  .hero .team{order:6}
+}
+
+/* hero headline: greeting, name, line */
+.hero h1 .h1-hi,.hero h1 .h1-name{display:block;font-size:inherit;font-weight:800;font-variation-settings:"wdth" 80,"opsz" 96;letter-spacing:-.01em;line-height:.95;margin:0;color:var(--ink)}
+.hero h1 .h1-name{white-space:nowrap}
+.hero h1{font-size:clamp(2.4rem,5.9vw,5.3rem)}
+@media (max-width:960px){.hero h1{font-size:clamp(2.4rem,7.5vw,4.4rem)}}
+.hero h1 .h1-sub{display:block;font-weight:400;font-variation-settings:"wdth" 100,"opsz" 96;letter-spacing:-.02em;font-size:.56em;line-height:1.1;margin-top:.4em}
+@media (max-width:640px){.hero h1{font-size:clamp(1.9rem,12.5vw,3.4rem)}.hero h1 .h1-sub{font-size:.62em}}
+
+@media (min-width:761px){.bar nav a,.mark{white-space:nowrap}}
+@media (min-width:761px) and (max-width:1040px){.bar nav{gap:18px;font-size:.93rem}.bar nav a.cv{padding:6px 12px}.mark{font-size:1rem}}
+@media (min-width:761px) and (max-width:900px){.bar nav{gap:14px;font-size:.9rem}.bar nav a[href="#tools"]{display:none}}
+/* mobile menu */
+.menu-btn{display:none}
+@media (max-width:760px){
+  .bar{position:relative}
+  .menu-btn{display:inline-flex;align-items:center;gap:10px;background:none;border:1px solid var(--mist);border-radius:999px;padding:9px 16px 9px 14px;font:600 .95rem var(--display);color:var(--ink);cursor:pointer}
+  .menu-icon,.menu-icon::before,.menu-icon::after{display:block;width:16px;height:2px;background:var(--ink);border-radius:2px;transition:transform .2s,opacity .2s}
+  .menu-icon{position:relative}
+  .menu-icon::before,.menu-icon::after{content:"";position:absolute;left:0}
+  .menu-icon::before{top:-5px}.menu-icon::after{top:5px}
+  .menu-btn[aria-expanded="true"] .menu-icon{background:transparent}
+  .menu-btn[aria-expanded="true"] .menu-icon::before{transform:translateY(5px) rotate(45deg)}
+  .menu-btn[aria-expanded="true"] .menu-icon::after{transform:translateY(-5px) rotate(-45deg)}
+  .bar nav{display:none;position:absolute;top:100%;left:0;right:0;z-index:20;flex-direction:column;gap:0;background:var(--card);border:1px solid var(--mist);border-radius:16px;padding:8px;box-shadow:0 18px 40px -18px rgba(28,22,48,.35)}
+  .bar nav.open{display:flex}
+  .bar nav a{display:block;padding:14px 14px;border-radius:10px;font-size:1.05rem;color:var(--ink)}
+  .bar nav a:hover,.bar nav a:focus-visible{background:var(--paper)}
+  .bar nav a.talk{border-bottom:0;padding:14px;margin-top:4px;background:var(--plum);color:#fff;text-align:center;font-weight:600}
+}
+@media (prefers-reduced-motion:reduce){.menu-icon,.menu-icon::before,.menu-icon::after{transition:none}}
+
+/* one size for section intro paragraphs on phones */
+@media (max-width:640px){
+  .sec-head p,.work-head p,.toolsec .sec-head p{font-size:1.08rem}
+  .contact p.lead{font-size:1.08rem}
+}
+
+/* download CV buttons */
+.btn-outline{display:inline-block;border:2px solid var(--plum);color:var(--plum);text-decoration:none;font-weight:600;padding:13px 24px;border-radius:999px;font-size:1rem;transition:background .2s,color .2s}
+.btn-outline:hover{background:var(--plum);color:#fff}
+.bar nav a.cv{color:var(--plum);font-weight:600;border:1.5px solid var(--plum);border-radius:999px;padding:6px 14px;margin:-8px 0}
+.bar nav a.cv:hover{background:var(--plum);color:#fff}
+@media (max-width:760px){
+  .bar nav a.cv{margin:4px 0 0;padding:12px 14px;text-align:center;border-width:2px}
+}
+@media (max-width:640px){.actions .btn-outline{width:100%;text-align:center}}
+@media (max-width:360px){.mark{font-size:.95rem;white-space:nowrap;gap:8px}.mark i{width:30px;height:30px}.menu-btn{padding:8px 12px}}
+
+
+/* ---------- responsive ---------- */
+/* ---------- work ---------- */
+.work{background:var(--card);border-top:1px solid var(--mist);padding:104px 0}
+.work-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:64px;align-items:end;margin-bottom:40px}
+.work-head h2{font-size:clamp(2.6rem,5.4vw,4.4rem);font-weight:800;font-variation-settings:"wdth" 88,"opsz" 96;letter-spacing:-.025em;line-height:.95}
+.work-head p{font-family:var(--serif);font-size:1.25rem;line-height:1.55;color:#2E2742;max-width:32em}
+
+/* career bar, drawn to scale: 2009 to 2026 */
+.span{margin-bottom:36px}
+.span-bar{display:grid;grid-template-columns:3fr 2fr 8fr 1fr 2fr;gap:3px}
+.seg{display:block;text-decoration:none;color:var(--ink)}
+.seg i{display:block;height:14px;border-radius:3px;transition:transform .2s}
+.seg:hover i,.seg:focus-visible i{transform:scaleY(1.6)}
+.seg span{display:block;margin-top:12px;font-size:.88rem;font-weight:600;line-height:1.25;padding-right:6px}
+.seg small{display:block;font-weight:400;color:var(--muted);font-size:.8rem;margin-top:2px}
+.seg.c1 i{background:#C9A7B6}.seg.c2 i{background:#A65E7D}.seg.c3 i{background:#6B1E3C}
+.seg.c4 i{background:#4A3A8C}.seg.c5 i{background:#2747C9}
+.seg.gap{pointer-events:none}
+.seg.gap i{background:repeating-linear-gradient(-45deg,var(--mist) 0 4px,transparent 4px 8px)}
+.seg.gap span{color:var(--muted);font-weight:400}
+
+/* roles */
+.roles{list-style:none;border-top:2px solid var(--ink)}
+.role{display:grid;grid-template-columns:170px minmax(0,1fr);gap:40px;padding:24px 0;border-bottom:1px solid var(--mist);scroll-margin-top:24px}
+.role:target{background:linear-gradient(90deg,rgba(39,71,201,.06),transparent 70%)}
+.role .when{font-weight:600;font-size:1rem;padding-top:6px;font-variant-numeric:tabular-nums}
+.role .when small{display:block;font-weight:400;color:var(--muted);font-size:.85rem;margin-top:2px}
+.role h3{font-size:1.55rem;font-weight:700;letter-spacing:-.015em;line-height:1.2}
+.role .org{color:var(--muted);font-size:1rem;margin-top:4px}
+.role .result{font-family:var(--serif);font-size:1.12rem;line-height:1.55;color:#2E2742;margin-top:14px;max-width:36em}
+.role .tools{margin-top:12px;font-size:.92rem;color:var(--muted);max-width:44em}
+.role .tools b{color:var(--ink);font-weight:600}
+.role details{margin-top:16px}
+.role summary{display:inline-flex;align-items:center;gap:10px;cursor:pointer;font-weight:600;font-size:.95rem;color:var(--cobalt);list-style:none;padding:4px 0}
+.role summary::-webkit-details-marker{display:none}
+.role summary::before{content:"";width:18px;height:18px;border-radius:50%;border:2px solid var(--cobalt);background:linear-gradient(var(--cobalt),var(--cobalt)) center/8px 2px no-repeat,linear-gradient(var(--cobalt),var(--cobalt)) center/2px 8px no-repeat;transition:transform .25s}
+.role details[open] summary::before{background:linear-gradient(var(--cobalt),var(--cobalt)) center/8px 2px no-repeat}
+.role summary .less{display:none}
+.role details[open] summary .more{display:none}
+.role details[open] summary .less{display:inline}
+.role details ul{list-style:none;margin-top:12px;max-width:42em}
+.role details li{position:relative;padding-left:20px;margin-top:10px;line-height:1.55;color:#2E2742}
+.role details li::before{content:"";position:absolute;left:0;top:.62em;width:8px;height:2px;background:var(--plum)}
+.role.now h3::after{content:"Current";display:inline-block;vertical-align:middle;margin-left:12px;font-size:.78rem;font-weight:600;letter-spacing:0;color:var(--plum);background:#F7EEF2;padding:3px 10px;border-radius:999px}
+
+@media (max-width:960px){
+  .work{padding:72px 0}
+  .work-head{grid-template-columns:1fr;gap:18px;margin-bottom:40px}
+  .role{grid-template-columns:1fr;gap:6px}
+  .role .when{padding-top:0}
+  .role .when small{display:inline;margin-left:8px}
+}
+@media (max-width:640px){
+  .span-bar{display:flex;flex-direction:column-reverse;gap:0}
+  .seg{display:grid;grid-template-columns:14px 1fr;gap:14px;padding:6px 0}
+  .seg i{height:auto;min-height:calc(var(--y,1) * 16px + 12px);width:14px}
+  .seg span{margin-top:0}
+  .seg.gap i{min-height:22px}
+  .role h3{font-size:1.3rem}
+  .role .result{font-size:1.1rem}
+}
+@media (prefers-reduced-motion:reduce){.seg i,.role summary::before{transition:none}}
+
+/* ---------- shared section head ---------- */
+.sec{padding:104px 0}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:64px;align-items:end;margin-bottom:56px}
+.sec-head h2{font-size:clamp(2.6rem,5.4vw,4.4rem);font-weight:800;font-variation-settings:"wdth" 88,"opsz" 96;letter-spacing:-.025em;line-height:.95}
+.sec-head p{font-family:var(--serif);font-size:1.25rem;line-height:1.55;color:#2E2742;max-width:32em}
+
+/* ---------- projects ---------- */
+.projects{background:var(--paper)}
+.research{padding-top:0}
+.paper-link{color:var(--cobalt);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.paper-link:hover{color:var(--plum)}
+.feature{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;background:var(--card);border-radius:20px;padding:44px;margin-bottom:28px}
+.feature h3,.proj h3{font-size:1.7rem;font-weight:700;letter-spacing:-.015em;line-height:1.15}
+.kind{color:var(--muted);font-size:1rem;margin-top:4px}
+.feature .story{margin-top:22px}
+.story dt{font-weight:600;font-size:.95rem;margin-top:16px}
+.story dd{font-family:var(--serif);font-size:1.12rem;line-height:1.55;color:#2E2742;margin-top:2px;max-width:34em}
+.result-line{margin-top:24px;padding:16px 18px;border-left:4px solid var(--plum);background:#F7EEF2;border-radius:0 10px 10px 0;font-size:1.05rem}
+.result-line b{color:var(--plum)}
+.proj-links{display:flex;flex-wrap:wrap;gap:22px;margin-top:22px;font-weight:600}
+.proj-links a{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px;text-decoration-color:var(--cobalt)}
+.proj-links span{color:var(--muted);font-weight:400}
+
+/* agent flow diagram */
+.flow{align-self:center}
+.flow figcaption{font-weight:600;font-size:.95rem;margin-bottom:16px}
+.flow ol{list-style:none;counter-reset:f}
+.flow li{counter-increment:f;position:relative;display:grid;grid-template-columns:34px 1fr;gap:14px;padding-bottom:18px}
+.flow li::before{content:counter(f);width:34px;height:34px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:700;font-size:.9rem;position:relative;z-index:1}
+.flow li:not(:last-child)::after{content:"";position:absolute;left:16px;top:34px;bottom:0;width:2px;background:var(--mist)}
+.flow li b{display:block;font-weight:600;padding-top:5px}
+.flow li span{display:block;color:var(--muted);font-size:.93rem;line-height:1.45}
+.flow li.gate::before{background:var(--cobalt)}
+.flow .tools-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.flow .tools-row em{font-style:normal;font-size:.86rem;line-height:1.2;padding:6px 11px;border-radius:6px;background:var(--card);border:1px solid #CFC8DC;color:#2E2742}
+.flow .fork{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.flow .fork i{font-style:normal;font-size:.88rem;padding:8px 10px;border-radius:8px;line-height:1.35}
+.flow .fork .yes{background:#E6EBFB;color:#1B2F86}
+.flow .fork .no{background:#F7EEF2;color:var(--plum)}
+
+.proj-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.proj{position:relative;display:flex;flex-direction:column;background:var(--card);border-radius:20px;padding:32px 34px 28px}
+.proj .stack{margin-bottom:0}
+.proj .proj-links{margin-top:0;padding-top:18px}
+.proj p.what{margin-bottom:0}
+.proj h3{font-size:1.35rem}
+.proj p.what{font-family:var(--serif);font-size:1.12rem;line-height:1.55;color:#2E2742;margin-top:14px}
+.proj .big{margin-top:20px;font-size:2.1rem;font-weight:800;font-variation-settings:"wdth" 88;letter-spacing:-.02em;line-height:1;color:var(--plum)}
+.proj .big small{display:block;font-size:.92rem;font-weight:400;font-variation-settings:"wdth" 100;letter-spacing:0;color:var(--muted);margin-top:6px;line-height:1.4}
+.proj .stack{margin-top:16px;font-size:.9rem;color:var(--muted)}
+.proj .stack b{color:var(--ink);font-weight:600}
+.route{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:center;margin-top:18px;font-size:.88rem}
+.route b{font-weight:600}
+.route i{font-style:normal;padding:6px 10px;border-radius:8px}
+.route .r1{background:#E6EBFB;color:#1B2F86}
+.route .r2{background:#F7EEF2;color:var(--plum)}
+
+.gw{margin:18px 0 0;display:flex;flex-direction:column;align-items:stretch;font-size:.86rem}
+.gw-node{align-self:flex-start;padding:7px 12px;border-radius:8px;background:var(--card);border:1px solid var(--mist);position:relative;margin-bottom:16px;font-weight:600}
+.gw-node::after{content:"";position:absolute;left:18px;bottom:-17px;width:2px;height:16px;background:var(--mist)}
+.gw-router{background:var(--ink);color:#fff;border-color:var(--ink)}
+.gw-fork{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.gw-leaf{padding:8px 10px;border-radius:8px;line-height:1.35}
+.gw-leaf b{display:block;font-weight:700;margin-bottom:2px}
+.gw-leaf.r1{background:#E6EBFB;color:#1B2F86}
+.gw-leaf.r2{background:#F7EEF2;color:var(--plum)}
+
+.proj .org-line{font-size:.9rem;font-weight:600;color:var(--plum);margin-top:6px}
+.results{margin-top:auto;padding:10px 14px;border:1px solid #CFC8DC;border-radius:10px;background:var(--paper);font-size:.95rem;line-height:1.5;color:#2E2742}
+.results b{font-size:1.08rem;font-weight:700;color:var(--plum)}
+.proj .what{margin-bottom:18px}
+.proj .stack{line-height:1.6}
+@media (max-width:640px){
+  .proj.compact:not(.open) :is(.kind,.org-line,.what,.stack){display:none}
+  .proj.compact:not(.open) .results{margin-top:10px}
+}
+
+.proj.wide{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);column-gap:48px;align-items:end}
+.proj.wide .wide-r .results{margin-top:0}
+@media (max-width:960px){.proj.wide{grid-template-columns:1fr}.proj.wide .wide-r{margin-top:6px}}
+
+.cf{background:#FFFBEA;color:#5A4500;padding:0 4px;border:1px dashed #C9A227;border-radius:4px;font-weight:inherit}
+.ph{background:#FFF4C2;color:#5A4500;padding:0 4px;border-radius:3px}
+
+/* ---------- tools I use (dark band) ---------- */
+.toolsec{background:var(--ink);color:#E9E5F2;padding:104px 0}
+.toolsec .sec-head h2{color:#fff}
+.toolsec .sec-head p{color:#C9C3DA}
+.tool-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.tg{background:rgba(255,255,255,.04);border:1px solid rgba(233,229,242,.12);border-radius:18px;padding:22px 22px 24px}
+.tg.wide{background:rgba(39,71,201,.16);border-color:rgba(127,160,255,.35)}
+.tg h3{font-size:1.08rem;font-weight:700;color:#fff;letter-spacing:-.005em}
+.tg p{font-size:.92rem;color:#A69FBC;margin-top:4px;max-width:46em}
+.tg ul{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.tg li{font-size:.86rem;line-height:1.2;padding:7px 12px;border:1px solid rgba(233,229,242,.28);border-radius:6px;color:#E9E5F2}
+.tg.wide li{border-color:rgba(190,205,255,.45);color:#fff}
+.tg li.cf{border:1px dashed #E3C25A;color:#F5E3A1;background:rgba(227,194,90,.08)}
+.tg h3{display:flex;align-items:center;gap:12px}
+.tg-ic{flex:none;display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:rgba(243,182,201,.12);color:#F3B6C9}
+.tg-ic svg{width:20px;height:20px}
+.tg.wide .tg-ic{background:rgba(127,160,255,.22);color:#C9D6FF}
+
+@media (max-width:640px){.tg.wide p{margin-left:0}.tg-ic{width:32px;height:32px}.tg-ic svg{width:18px;height:18px}}
+.tools-key.dark{color:#A69FBC;margin-top:22px}
+.tools-key.dark i{border-color:#E3C25A;background:rgba(227,194,90,.08)}
+@media (max-width:960px){
+  .toolsec{padding:72px 0}
+  .tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  .toolsec{padding:56px 0}
+  .tool-grid{grid-template-columns:1fr;gap:12px}
+  .tg{padding:18px 16px 20px;border-radius:16px}
+  .tg li{font-size:.8rem;padding:6px 10px}
+}
+
+/* ---------- contact ---------- */
+.contact{background:var(--plum);color:#fff;padding:112px 0 0}
+.contact h2{font-size:clamp(2.6rem,6.2vw,5.4rem);font-weight:800;font-variation-settings:"wdth" 88,"opsz" 96;letter-spacing:-.025em;line-height:.95;max-width:12em}
+.contact .lead{font-family:var(--serif);font-size:1.3rem;line-height:1.55;color:#F3DCE5;max-width:32em;margin-top:24px}
+.mail{display:inline-block;margin-top:40px;font-size:clamp(1.5rem,3.4vw,2.6rem);font-weight:700;color:#fff;text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:8px;text-decoration-color:#F3B6C9}
+.contact-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:40px}
+.btn-light{display:inline-block;background:#fff;color:var(--plum);font-weight:700;padding:15px 26px;border-radius:999px;text-decoration:none}
+.btn-light:hover{background:#F7EEF2}
+.btn-line{display:inline-block;border:2px solid rgba(255,255,255,.55);color:#fff;font-weight:600;padding:13px 24px;border-radius:999px;text-decoration:none}
+.btn-line:hover{border-color:#fff}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-top:104px;padding:26px 0 30px;border-top:1px solid rgba(255,255,255,.2);font-size:.92rem;color:#F3DCE5}
+.foot a{color:#fff}
+.contact :focus-visible{outline-color:#fff}
+
+@media (max-width:960px){
+  .sec{padding:72px 0}
+  .sec-head{grid-template-columns:1fr;gap:18px;margin-bottom:40px}
+  .feature{grid-template-columns:1fr;padding:28px;gap:36px}
+  .proj-grid{grid-template-columns:1fr;gap:16px}
+  .proj{padding:26px 24px 22px}
+  .contact{padding-top:80px}
+}
+@media (max-width:640px){
+  .feature{padding:22px 18px;border-radius:16px}
+  .flow .fork{grid-template-columns:1fr}
+  .contact-actions a{width:100%;text-align:center}
+}
+
+/* work: compact mobile layout */
+.span-ends{display:none}
+.tools-m{display:none}
+.rt{all:unset;cursor:pointer;display:block;width:100%}
+@media (max-width:640px){
+  .work{padding:56px 0}
+  .work-head{margin-bottom:28px}
+  .work-head p{font-size:1.08rem}
+  .span{margin-bottom:28px}
+  .span-bar{display:grid !important;grid-template-columns:3fr 2fr 8fr 1fr 2fr;gap:2px;flex-direction:initial}
+  .span-bar .seg{display:block;padding:0}
+  .span-bar .seg i{height:8px;min-height:0;width:auto}
+  .span-bar .seg span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .span-ends{display:flex;justify-content:space-between;margin-top:8px;font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+  .role{padding:18px 0;gap:2px}
+  .role .when{font-size:.85rem}
+  .role h3{font-size:1.15rem}
+  .role .org{font-size:.9rem;margin-top:2px}
+  .role .result{font-size:1.02rem;margin-top:10px}
+  .role > div > .tools{display:none}
+  .tools-m{display:block;margin:4px 0 6px}
+  .role details{margin-top:10px}
+  .role.compact{position:relative}
+  .role.compact h3{padding-right:40px}
+  .role.compact .rt::after{content:"";position:absolute;right:0;top:20px;width:26px;height:26px;border-radius:50%;border:2px solid var(--cobalt);background:linear-gradient(var(--cobalt),var(--cobalt)) center/10px 2px no-repeat,linear-gradient(var(--cobalt),var(--cobalt)) center/2px 10px no-repeat}
+  .role.compact.open .rt::after{background:linear-gradient(var(--cobalt),var(--cobalt)) center/10px 2px no-repeat}
+  .role.compact:not(.open) .result,.role.compact:not(.open) details{display:none}
+  .role.compact details > summary{display:none}
+  .role.compact details ul{margin-top:6px}
+}
+
+/* projects: compact mobile layout */
+@media (max-width:640px){
+  .projects{padding:56px 0}
+  .projects .sec-head p{font-size:1.08rem}
+  .feature{gap:24px}
+  .feature h3{font-size:1.4rem}
+  .story dd,.proj p.what{font-size:1.02rem}
+  .result-line{margin-top:18px}
+  .proj{padding:18px 18px;border-radius:16px}
+  .proj h3{font-size:1.15rem}
+  .proj .big{font-size:1.6rem;margin-top:12px}
+  .proj.compact{position:relative}
+  .proj.compact h3{padding-right:44px}
+  .proj.compact .rt::after{content:"";position:absolute;right:16px;top:18px;width:26px;height:26px;border-radius:50%;border:2px solid var(--cobalt);background:linear-gradient(var(--cobalt),var(--cobalt)) center/10px 2px no-repeat,linear-gradient(var(--cobalt),var(--cobalt)) center/2px 10px no-repeat}
+  .proj.compact.open .rt::after{background:linear-gradient(var(--cobalt),var(--cobalt)) center/10px 2px no-repeat}
+  .proj.compact:not(.open) :is(.kind,.what,.stack,.big small){display:none}
+  .proj.compact:not(.open) .big{margin-top:6px}
+}
+
+/* work: role rows with tools beside them */
+.work-cols{display:block}
+.cols-head{display:grid;grid-template-columns:130px minmax(0,1fr) 360px;gap:0 40px;padding-bottom:12px;border-bottom:2px solid var(--ink)}
+.cols-head span{font-size:.88rem;font-weight:600;color:var(--muted)}
+.cols-head span:nth-child(3){color:var(--ink)}
+.work-cols .roles{border-top:0}
+.work-cols .role{grid-template-columns:130px minmax(0,1fr) 360px;gap:0 40px}
+.role-tools ul{list-style:none;display:flex;flex-wrap:wrap;gap:6px;padding-top:4px}
+.role-tools li{font-size:.8rem;line-height:1.2;padding:5px 9px;border:1px solid #CFC8DC;border-radius:6px;color:#2E2742;background:var(--card)}
+.role-tools li.cf{border:1px dashed #C9A227;background:#FFFBEA;color:#5A4500}
+.role-tools li.extra{display:none}
+.role-tools.all li.extra{display:block}
+.role-tools .more-btn{border:1px dashed var(--cobalt);background:none;color:var(--cobalt);font-size:.8rem;font-weight:600;line-height:1.2;padding:5px 9px;border-radius:6px;cursor:pointer}
+.role-tools .more-btn:hover{background:#EEF1FC}
+.tools-key{margin-top:18px;font-size:.84rem;color:var(--muted);display:flex;align-items:center;gap:8px}
+.tools-key i{display:inline-block;width:22px;height:14px;border:1px dashed #C9A227;background:#FFFBEA;border-radius:4px}
+@media (max-width:1100px){
+  .cols-head{grid-template-columns:110px minmax(0,1fr) 280px;gap:0 28px}
+  .work-cols .role{grid-template-columns:110px minmax(0,1fr) 280px;gap:0 28px}
+}
+@media (max-width:960px){
+  .cols-head{display:none}
+  .work-cols .roles{border-top:2px solid var(--ink)}
+  .work-cols .role{grid-template-columns:1fr;gap:6px}
+  .role-tools ul{padding-top:8px}
+}
+@media (max-width:640px){
+  .work-cols .role{gap:2px}
+  .role-tools li{font-size:.8rem;padding:5px 9px}
+  .role.compact:not(.open) .role-tools{display:none}
+  .role.now .role-tools{display:none}
+  .role.now.show-tools .role-tools{display:block}
+}
+
+@media (max-width:960px){
+  .hero{grid-template-columns:1fr;gap:40px;padding-top:16px}
+  .photos{max-width:520px;margin:0 auto;width:100%;padding-bottom:30%}
+  .side-photo{left:auto;right:0;width:44%}
+  .main-photo figcaption{text-align:left;max-width:52%}
+}
+@media (max-width:640px){
+  .wrap{padding:0 18px}
+  .lede{font-size:1.15rem}
+  .hero h1 span{font-size:.6em}
+  .run{padding:18px 16px}
+  .run ol{font-size:.8rem}
+  .actions .btn{width:100%;text-align:center}
+}
+@media (prefers-reduced-motion:reduce){
+  .js .run li{opacity:1;transform:none;transition:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="mark" href="#top"><i>GJ</i>Gangadevi Jeyaraj</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="main-nav"><span class="menu-icon" aria-hidden="true"></span><span class="menu-label">Menu</span></button>
+    <nav aria-label="Main" id="main-nav">
+      <a href="#work">Work</a>
+      <a href="#tools">Tools</a>
+      <a href="#projects">Projects</a>
+      <a href="#research">Research</a>
+      <a href="blog/index.html">Blog</a>
+      <a class="cv" href="assets/Gangadevi-Jeyaraj-CV.pdf" download>Download CV</a>
+      <a class="talk" href="#contact">Get in touch</a>
+    </nav>
+  </header>
+</div>
+
+<main id="top">
+<div class="wrap">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <h1 id="hero-title"><span class="h1-hi">HEY, I'M</span> <span class="h1-name">GANGADEVI JEYARAJ</span> <span class="h1-sub">I build AI from the equation to the boardroom.</span></h1>
+        <p class="lede">I'm a Senior Agentic AI Engineer with a product mind. I find where AI agents pay off, then build, test and run them in production.</p>
+
+        <section class="run value" aria-label="Why hire me">
+          <ol>
+            <li class="ok"><span><b>Work done in hours, not weeks.</b> I turn slow, manual workflows into agents that use your tools and finish the job.</span></li>
+            <li class="ok"><span><b>Lower AI costs.</b> I match each task to the right model, so spending stays below the value it creates.</span></li>
+            <li class="done"><span><b>AI you can trust.</b> Every agent is tested before release and monitored after, with people in the loop where it matters.</span></li>
+          </ol>
+        </section>
+
+        <div class="actions">
+          <a class="btn" href="#contact">Hire Gangadevi</a>
+          <a class="btn-outline" href="assets/Gangadevi-Jeyaraj-CV.pdf" download>Download CV</a>
+          <a class="textlink" href="#projects">See what I've built</a>
+        </div>
+      </div>
+
+      <div class="photos">
+        <figure class="main-photo">
+          <img src="assets/photos/ganga-ai-sculpture.jpeg" alt="Gangadevi Jeyaraj smiling in front of a sculpture of a human head made from circuit boards" width="1200" height="1600">
+          <figcaption>"Manuscript to Mind" installation, New Delhi</figcaption>
+        </figure>
+        <figure class="side-photo">
+          <img src="assets/photos/ganga-ai-summit-backdrop.jpeg" alt="Gangadevi Jeyaraj at the India AI Impact Summit 2026 backdrop" width="1200" height="1600" loading="lazy">
+          <figcaption>India AI Impact Summit, February 2026</figcaption>
+        </figure>
+      </div>
+    </section>
+
+</div>
+
+  <section class="edu-sec" id="education" aria-labelledby="edu-title">
+    <div class="wrap edu-grid">
+      <h2 id="edu-title">Education</h2>
+      <ul>
+        <li class="edu-card"><span class="edu-year">2014</span><span class="edu-body"><b>MTech, Embedded Systems</b><span>Amrita School of Engineering, Bengaluru</span></span></li>
+        <li class="edu-card"><span class="edu-year">2009</span><span class="edu-body"><b>BE, Computer Science &amp; Engineering</b><span>Anna University, Chennai</span></span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="work" id="work" aria-labelledby="work-title">
+    <div class="wrap">
+      <div class="work-head">
+        <h2 id="work-title">Work</h2>
+        <p>Fifteen years in AI, including two startups I founded, from computer vision to today's AI agents.</p>
+      </div>
+
+      <nav class="span" aria-label="Career by year, 2009 to 2026">
+        <div class="span-bar">
+          <a class="seg c1" style="--y:3" href="#role-1"><i></i><span>Computer vision<small>2009–2012</small></span></a>
+          <a class="seg c2" style="--y:2" href="#role-2"><i></i><span>Generative video<small>2014–2016</small></span></a>
+          <a class="seg c3" style="--y:8" href="#role-3"><i></i><span>NLP, ML and MLOps<small>2016–2024</small></span></a>
+          <a class="seg c4" style="--y:1" href="#role-ws"><i></i><span>EdTech AI<small>2024–25</small></span></a>
+          <a class="seg c5" style="--y:2" href="#role-4"><i></i><span>Agentic AI<small>2025–now</small></span></a>
+        </div>
+        <p class="span-ends" aria-hidden="true"><span>2009</span><span>2026</span></p>
+      </nav>
+
+      <div class="work-cols">
+      <div class="cols-head" aria-hidden="true"><span>When</span><span>Role and result</span><span>Tools I use</span></div>
+      <ol class="roles" reversed>
+        <li class="role now" id="role-4">
+          <div class="when">2025–now<small>1+ year</small></div>
+          <div>
+            <h3>Chief Product Officer (CPO)</h3>
+            <p class="org">Enthiram.ai, agentic AI company, Bengaluru</p>
+            <p class="result">Built an insurance claims agent that cut processing from 14 days to 3.5 hours.</p>
+            <details>
+              <summary><span class="more">Show details</span><span class="less">Hide details</span></summary>
+              <ul>
+                <li>Own Enthiram.ai’s products and product team: overall product vision, strategy and development.</li>
+                <li>Connected LangGraph agents to internal databases through a set of MCP servers, secured with OAuth2 and OIDC.</li>
+                <li>Built a gateway that sends routine queries to self-hosted models (vLLM, LiteLLM), cutting cloud AI spend by 52%, or $380K a year, with my team.</li>
+                <li>Built the claims-exception agent on Temporal.io, taking each case from 14 days to 3.5 hours.</li>
+                <li>Built SOC 2 Type II market research and content writing agents, with a full audit trail, PII redaction and role-based access.</li>
+                <li>Added automated evaluations (DeepEval, Braintrust) to GitHub Actions, so unsafe model changes are blocked before release.</li>
+              </ul>
+            </details>
+          </div>
+          <div class="role-tools" aria-label="Tools used in this role"><ul><li>LangGraph</li><li>LangChain</li><li>MCP servers</li><li>OpenAI Agents SDK</li><li>Temporal.io</li><li>vLLM</li><li>LiteLLM</li><li>Claude and OpenAI APIs</li><li>DeepEval</li><li>Braintrust</li><li>LangSmith</li><li>Pytest</li><li>PostgreSQL</li><li>Python</li><li>Kubernetes</li><li>GitHub Actions</li><li>AWS</li></ul></div>
+        </li>
+
+        <li class="role" id="role-ws">
+          <div class="when">2024–2025<small>1 year</small></div>
+          <div>
+            <h3>Founder</h3>
+            <p class="org">Wschool.ai, AI tools for course generation</p>
+            <p class="result">Built a personal AI teaching agent that creates and teaches AI/ML courses online.</p>
+            <details>
+              <summary><span class="more">Show details</span><span class="less">Hide details</span></summary>
+              <ul>
+                <li>Built AI tools that turn a topic into a complete course: syllabus, lessons, quizzes and narrated video.</li>
+                <li>Built a tutor agent that answers learners’ questions from the course material using retrieval-augmented generation (RAG).</li>
+              </ul>
+            </details>
+          </div>
+          <div class="role-tools" aria-label="Tools used in this role"><ul><li>Python</li><li>LangChain</li><li>LlamaIndex</li><li>GPT-4o</li><li>Claude 3.5 Sonnet</li><li>Qdrant</li><li>FastAPI</li><li>Next.js</li><li>ElevenLabs text-to-speech</li><li>Docker</li><li>AWS</li></ul></div>
+        </li>
+
+        <li class="role" id="role-3">
+          <div class="when">2016–2024<small>8 years</small></div>
+          <div>
+            <h3>Lead ML Engineer, Applied AI &amp; MLOps</h3>
+            <p class="org">Pearl Media Publications Pvt Ltd, academic publishing and legal research, Bengaluru</p>
+            <p class="result">Built LegalAI, a Microsoft Word copilot that helps lawyers draft contracts and check citations.</p>
+            <details>
+              <summary><span class="more">Show details</span><span class="less">Hide details</span></summary>
+              <ul>
+                <li>Led a 15+ member team and the company’s AI development in a fast-paced startup environment, driving new AI products from research to release.</li>
+                <li>LegalAI drafts contracts, finds precedents, verifies citations and translates into regional languages, all inside Word.</li>
+                <li>Built the legal NLP pipeline with spaCy and neural models, moving it to ELMo and BERT when they were released in 2018, processing 100,000+ legal and research documents a month.</li>
+                <li>Built search across 5M+ company documents with pgvector and Elasticsearch, answering in under 120 ms for 95% of queries.</li>
+              </ul>
+            </details>
+          </div>
+          <div class="role-tools" aria-label="Tools used in this role"><ul><li>Python</li><li>spaCy</li><li>ELMo and BERT</li><li>Hugging Face Transformers</li><li>PyTorch</li><li>TensorFlow</li><li>Office JS</li><li>FastAPI</li><li>pgvector</li><li>Elasticsearch</li><li>Azure OpenAI</li><li>scikit-learn</li><li>NLTK</li><li>MLflow</li><li>Docker</li><li>Kubernetes</li></ul></div>
+        </li>
+
+        <li class="role" id="role-2">
+          <div class="when">2014–2016<small>2 years</small></div>
+          <div>
+            <h3>Co-founder &amp; Chief Technology Officer</h3>
+            <p class="org">Vizournal, scientific video journal startup, Bengaluru</p>
+            <p class="result">Turned research papers into narrated summary videos, cutting the time from 6 hours to 4 minutes.</p>
+            <details>
+              <summary><span class="more">Show details</span><span class="less">Hide details</span></summary>
+              <ul>
+                <li>Founded and designed Vizournal, an automated video platform that reads a PDF paper, pulls out its figures, writes a script and renders a voiced video.</li>
+                <li>Used generative adversarial networks (GANs) to turn paper content into visuals.</li>
+                <li>Built the video rendering queue with Python, OpenCV and FFmpeg on AWS EC2.</li>
+              </ul>
+            </details>
+          </div>
+          <div class="role-tools" aria-label="Tools used in this role"><ul><li>Python</li><li>GANs</li><li>Theano</li><li>PDFMiner</li><li>NLTK</li><li>Text-to-speech</li><li>OpenCV</li><li>FFmpeg</li><li>Celery</li><li>AWS EC2</li></ul></div>
+        </li>
+
+        <li class="role" id="role-1">
+          <div class="when">2009–2012<small>3 years</small></div>
+          <div>
+            <h3>Computer Vision Engineer</h3>
+            <p class="org">ESOFTLABZ, R&amp;D company, Bengaluru</p>
+            <p class="result">Wrote screening software that finds lung nodules in radiology scans.</p>
+            <details>
+              <summary><span class="more">Show details</span><span class="less">Hide details</span></summary>
+              <ul>
+                <li>Developed computer-vision detection in C++ and OpenCV, working directly on raw DICOM scans.</li>
+                <li>Built breast cancer image segmentation and classification with computer vision in MATLAB.</li>
+              </ul>
+            </details>
+          </div>
+          <div class="role-tools" aria-label="Tools used in this role"><ul><li>C++</li><li>OpenCV</li><li>DICOM</li><li>DCMTK</li><li>MATLAB</li><li>SVM classifiers</li><li>Image segmentation</li></ul></div>
+        </li>
+      </ol>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="toolsec" id="tools" aria-labelledby="tools-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="tools-title">Tools I use</h2>
+        <p>The stack I reach for when I take an agent from idea to production, grouped the way teams hire for it.</p>
+      </div>
+      <div class="tool-grid">
+        <div class="tg wide">
+          <h3><span class="tg-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9.5 17h5"/><circle cx="12" cy="3" r="1"/></svg></span>Agentic AI</h3>
+          <ul><li>LangGraph</li><li>LangChain</li><li>OpenAI Agents SDK</li><li>Model Context Protocol (MCP)</li><li>Temporal.io</li><li>Tool and function calling</li><li>Multi-step workflows</li><li>Human-in-the-loop</li></ul>
+        </div>
+        <div class="tg ">
+          <h3><span class="tg-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01"/></svg></span>LLMs and inference</h3>
+          <ul><li>Claude</li><li>GPT and OpenAI API</li><li>Azure OpenAI</li><li>Llama 3.2</li><li>Phi-4</li><li>DeepSeek-Distill</li><li>Hugging Face Transformers</li><li>BERT and ELMo</li><li>vLLM</li><li>LiteLLM</li><li>Semantic routing</li><li>NVIDIA CUDA</li></ul>
+        </div>
+        <div class="tg ">
+          <h3><span class="tg-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 13l2 2 4-4"/></svg></span>LLMOps, MLOps and cloud</h3>
+          <ul><li>DeepEval</li><li>Braintrust</li><li>LangSmith</li><li>Pytest</li><li>Synthetic red-teaming</li><li>Regression-gated CI</li><li>OpenTelemetry</li><li>Microsoft Presidio (PII)</li><li>MLflow</li><li>AWS</li><li>Azure</li><li>Docker</li><li>Kubernetes</li><li>GitHub Actions</li><li>Prometheus and Grafana</li></ul>
+        </div>
+        <div class="tg ">
+          <h3><span class="tg-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></span>RAG, search and data engineering</h3>
+          <ul><li>LlamaIndex</li><li>pgvector</li><li>Qdrant</li><li>Elasticsearch</li><li>PostgreSQL</li><li>MongoDB</li><li>Redis</li><li>Knowledge graphs</li><li>ETL pipelines</li><li>Apache Kafka</li><li>Playwright crawling</li><li>Celery</li></ul>
+        </div>
+        <div class="tg ">
+          <h3><span class="tg-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><path d="M6.6 7.4l3.8 3.2M6.6 16.6l3.8-3.2M14 12h3"/></svg></span>Machine learning, NLP and vision</h3>
+          <ul><li>PyTorch</li><li>TensorFlow</li><li>Keras</li><li>GANs</li><li>scikit-learn</li><li>spaCy</li><li>NLTK</li><li>gensim</li><li>OpenCV</li><li>FFmpeg</li><li>DICOM</li></ul>
+        </div>
+        <div class="tg ">
+          <h3><span class="tg-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></span>Languages and APIs</h3>
+          <ul><li>Python</li><li>C++</li><li>TypeScript</li><li>SQL</li><li>MATLAB</li><li>FastAPI</li><li>WebSockets</li><li>Pydantic</li><li>Office JS</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec projects" id="projects" aria-labelledby="projects-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="projects-title">Projects</h2>
+        <p>Five systems I designed and shipped, each one replacing a process that was slow, expensive or both.</p>
+      </div>
+
+      <div class="proj-grid">
+        <article class="proj wide">
+          <div class="wide-l">
+            <h3>Insurance Claims-Exception Agent</h3>
+            <p class="kind">Agentic AI and workflow automation</p>
+            <p class="org-line">Enthiram.ai, 2025–now</p>
+            <p class="what">Built an autonomous agent that handles commercial insurance claim exceptions, the flagged cases that used to wait in a manual review queue. Running as a durable workflow on Temporal.io, it works through each case end to end, turning a two-week backlog into same-day decisions.</p>
+          </div>
+          <div class="wide-r">
+            <p class="results"><b>14 days → 3.5 hours</b> per claim exception, processed autonomously</p>
+            <p class="stack"><b>Built with</b> Python, LangGraph, LangChain, Temporal.io, MCP servers, Claude and OpenAI APIs, PostgreSQL, FastAPI, DeepEval, LangSmith, Docker, Kubernetes, AWS</p>
+          </div>
+        </article>
+        <article class="proj">
+          <h3>Open-Weight Gateway &amp; SLM Semantic Router</h3>
+          <p class="kind">LLM infrastructure and cost engineering</p>
+          <p class="org-line">Enthiram.ai, 2025–now</p>
+          <p class="what">Designed and built an LLM gateway that sits in front of all of the organisation's AI traffic. A semantic router classifies each request, serves routine queries from self-hosted small language models (Phi-4, Llama 3.2, DeepSeek-Distill) on vLLM, and escalates only complex reasoning to Claude, giving teams one endpoint with far lower running costs.</p>
+          <p class="results"><b>52%</b> lower LLM API spend, <b>$380K</b> saved a year, with my team</p>
+          <p class="stack"><b>Built with</b> Python, FastAPI, vLLM, LiteLLM proxy, Phi-4, Llama 3.2, DeepSeek-Distill, Claude API, Sentence-transformer embeddings, Redis caching, Docker, Docker Compose, Kubernetes, NVIDIA GPUs and CUDA, Prometheus and Grafana, GitHub Actions</p>
+        </article>
+        <article class="proj">
+          <h3>SOC 2 Type II Market Research &amp; Content Writing Agents</h3>
+          <p class="kind">Agentic AI for research and content</p>
+          <p class="org-line">Enthiram.ai, 2025–now</p>
+          <p class="what">Built two agents that work as a team inside SOC 2 Type II controls. The research agent scans the web and company sources, profiles competitors and writes a cited market brief. The writing agent turns that brief into on-brand articles and posts, which an editor agent checks before a person approves them.</p>
+          <p class="results"><b>SOC 2 Type II</b> controls on every step: full audit trail, PII redaction and role-based access</p>
+          <p class="stack"><b>Built with</b> Python, LangGraph, LangChain, MCP servers, Claude and OpenAI APIs, Playwright crawling, Tavily search, Qdrant, PostgreSQL, FastAPI, Microsoft Presidio, OpenTelemetry, AWS KMS, Docker, Kubernetes, AWS</p>
+        </article>
+        <article class="proj">
+          <h3>LegalAI — MS Word Plugin &amp; Legal Copilot</h3>
+          <p class="kind">LegalTech and AI legal drafting</p>
+          <p class="org-line">Pearl Media Publications, 2016–2024</p>
+          <p class="what">Architected and built LegalAI, a native Microsoft Word add-in that brings an AI copilot into the lawyer's drafting workflow. It drafts contract clauses, researches precedents, attaches verifiable citations and translates into regional languages without leaving the document, backed by an async Python service.</p>
+          <p class="results"><b>70%</b> less time drafting contracts, <b>100%</b> of citations tracked and verified</p>
+          <p class="stack"><b>Built with</b> Office JS API, TypeScript, React and Fluent UI, Python, asyncio, FastAPI, Pydantic, Azure OpenAI, Citation extractor, Regional-language NLP, Elasticsearch, pgvector, Docker, Azure App Service</p>
+        </article>
+        <article class="proj">
+          <h3>Vizournal — Paper-to-Video AI Platform</h3>
+          <p class="kind">Multimodal content generation</p>
+          <p class="org-line">Vizournal, 2014–2016</p>
+          <p class="what">Founded and architected Vizournal, a platform that turns PDF research papers into voice-narrated summary videos. It parses the paper, extracts its figures, generates a narration script and renders the final video through an automated queue on AWS.</p>
+          <p class="results"><b>6 h → 4 min</b> to turn a paper into a summary video</p>
+          <p class="stack"><b>Built with</b> Python, GANs, Theano, PDFMiner, NLTK, OpenCV, FFmpeg, Text-to-speech engine, Celery, Redis, AWS EC2, Amazon S3</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+
+
+
+  <section class="sec projects research" id="research" aria-labelledby="research-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="research-title">Research</h2>
+        <p>Published work on keeping long-running AI agents inside the rules they are given.</p>
+      </div>
+
+      <div class="proj-grid">
+        <article class="proj wide">
+          <div class="wide-l">
+            <h3>Charter Coherence Protocol: Eliminating Context Rot in Long-Running Autonomous Multi-Agent Enterprise Systems</h3>
+            <p class="kind">Published research paper, lead author</p>
+            <p class="org-line">International Journal of Advanced Research in Science and Technology, Vol. 15, Issue 09, 2026</p>
+            <p class="what">When AI agents run for days, the policy rules that govern them fade. The paper names this decay context rot and presents the Charter Coherence Protocol (CCP), which keeps those rules in force and checks every tool call against them, without changing the model or the orchestration framework.</p>
+          </div>
+          <div class="wide-r">
+            <p class="results"><b>60–79% → 0</b> rule violations executed at tools, in every scenario tested</p>
+            <p class="stack"><a class="paper-link" href="https://www.ijarst.com/pdf/564/charter-coherence-protocol-eliminating-context-rot-in-long-running-autonomous-mu.pdf" target="_blank" rel="noopener">Read the paper (PDF)</a> &nbsp;·&nbsp; <a class="paper-link" href="https://doi.org/10.62226/ijarst20260929" target="_blank" rel="noopener">DOI: 10.62226/ijarst20260929</a></p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" aria-labelledby="contact-title">
+    <div class="wrap">
+      <h2 id="contact-title">Hiring for agentic AI? Let's talk.</h2>
+      <p class="lead">I'm open to senior agentic AI engineering roles and open to remote work. Email is the fastest way to reach me, and my CV has the full detail.</p>
+      <a class="mail" href="mailto:ganga@enthiram.ai">ganga@enthiram.ai</a>
+      <div class="contact-actions">
+        <a class="btn-light" href="assets/Gangadevi-Jeyaraj-CV.pdf" download>Download CV</a>
+        <a class="btn-line" href="https://www.linkedin.com/in/gangadevijeyaraj/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn-line" href="https://github.com/gangadeviai/" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <footer class="foot">
+        <span>© 2026 Gangadevi Jeyaraj</span>
+        <a href="blog/index.html">Blog</a>
+        <a href="#top">Back to top</a>
+      </footer>
+    </div>
+  </section>
+</main>
+
+
+<script>
+(() => {
+  document.documentElement.classList.add('js');
+  const items = [...document.querySelectorAll('.run li')];
+  const replay = document.querySelector('.replay');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const play = () => {
+    if (replay) replay.classList.remove('on');
+    items.forEach(li => li.classList.remove('in'));
+    if (still) { items.forEach(li => li.classList.add('in')); return; }
+    items.forEach((li, i) => setTimeout(() => {
+      li.classList.add('in');
+      if (replay && i === items.length - 1) setTimeout(() => replay.classList.add('on'), 600);
+    }, 500 + i * 750));
+  };
+  play();
+  if (replay) replay.addEventListener('click', play);
+
+
+
+
+  document.querySelectorAll('.role.now details').forEach(d => d.addEventListener('toggle', () => d.closest('.role').classList.toggle('show-tools', d.open)));
+
+  // mobile menu
+  const mb = document.querySelector('.menu-btn'), nav = document.getElementById('main-nav');
+  const setMenu = o => { mb.setAttribute('aria-expanded', o); nav.classList.toggle('open', o); };
+  mb.addEventListener('click', () => setMenu(mb.getAttribute('aria-expanded') !== 'true'));
+  nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('open')) { setMenu(false); mb.focus(); } });
+  document.addEventListener('click', e => { if (nav.classList.contains('open') && !e.target.closest('.bar')) setMenu(false); });
+
+  // Work: show up to 8 tools per role, the rest behind "+N more"
+  document.querySelectorAll('.role-tools').forEach(box => {
+    const items = [...box.querySelectorAll('li')];
+    if (items.length <= 9) return;
+    items.slice(8).forEach(li => li.classList.add('extra'));
+    const li = document.createElement('li'); li.style.cssText = 'border:0;padding:0;background:none';
+    const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'more-btn';
+    const n = items.length - 8, label = () => box.classList.contains('all') ? 'Show fewer' : '+' + n + ' more';
+    btn.textContent = label(); btn.setAttribute('aria-expanded', 'false');
+    btn.addEventListener('click', () => { box.classList.toggle('all'); btn.textContent = label(); btn.setAttribute('aria-expanded', box.classList.contains('all')); });
+    li.appendChild(btn); box.querySelector('ul').appendChild(li);
+  });
+  // Work roles and projects: compact rows on phones
+  const mq = matchMedia('(max-width:640px)');
+  const rows = [...document.querySelectorAll('.role:not(.now), .proj')];
+  const compact = () => rows.forEach(li => {
+    const h3 = li.querySelector('h3'), d = li.querySelector('details');
+    if (mq.matches && !li.classList.contains('compact')) {
+      const b = document.createElement('button'); b.className = 'rt'; b.type = 'button';
+      b.setAttribute('aria-expanded', 'false'); b.textContent = h3.textContent; h3.textContent = ''; h3.appendChild(b);
+      b.addEventListener('click', () => { const o = li.classList.toggle('open'); b.setAttribute('aria-expanded', o); if (d) d.open = o; });
+      li.classList.add('compact');
+    } else if (!mq.matches && li.classList.contains('compact')) {
+      h3.textContent = h3.querySelector('.rt').textContent; li.classList.remove('compact', 'open'); if (d) d.open = false;
+    }
+  });
+  compact(); mq.addEventListener('change', compact);
+})();
+</script>
+</body>
+</html>

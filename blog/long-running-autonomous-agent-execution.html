@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Long-Running Autonomous AI Agents: Production Design | Gangadevi Jeyaraj</title>
+<meta name="description" content="Most AI agents fail when a task outlives one session. How I engineer long-running autonomous agents with durable execution, safe retries and human approval.">
+<meta name="author" content="Gangadevi Jeyaraj">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Long-Running Autonomous AI Agents: Production Design | Gangadevi Jeyaraj">
+<meta property="og:description" content="Most AI agents fail when a task outlives one session. How I engineer long-running autonomous agents with durable execution, safe retries and human approval.">
+<meta property="og:site_name" content="Gangadevi Jeyaraj">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Long-Running Autonomous AI Agents: Production Design | Gangadevi Jeyaraj">
+<meta name="twitter:description" content="Most AI agents fail when a task outlives one session. How I engineer long-running autonomous agents with durable execution, safe retries and human approval.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2F0F5;--ink:#1C1630;--muted:#5E5672;--plum:#6B1E3C;--cobalt:#2747C9;--mist:#DAD4E3;--card:#FFFFFF;--body:#2E2742;
+--display:'Bricolage Grotesque',system-ui,sans-serif;--serif:'Newsreader',Georgia,serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--display);font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--cobalt);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+.bar{display:flex;align-items:center;justify-content:space-between;padding:26px 0}
+.mark{display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:700;font-size:1.05rem;letter-spacing:-.01em}
+.mark i{width:34px;height:34px;border-radius:50%;background:var(--plum);color:var(--paper);display:grid;place-items:center;font-style:normal;font-size:.8rem;font-weight:700;letter-spacing:.02em}
+.bar nav{display:flex;gap:30px;font-size:.98rem;align-items:center}
+.bar nav a{text-decoration:none;color:var(--muted)}
+.bar nav a:hover{color:var(--ink)}
+.bar nav a[aria-current]{color:var(--ink);font-weight:600}
+.bar nav a.talk{color:var(--ink);font-weight:600;border-bottom:2px solid var(--plum);padding-bottom:2px}
+.bar nav a.cv{color:var(--plum);font-weight:600;border:1.5px solid var(--plum);border-radius:999px;padding:6px 14px}
+.bar nav a.cv:hover{background:var(--plum);color:#fff}
+.menu-btn{display:none}
+@media (max-width:860px){
+  .bar{position:relative}
+  .menu-btn{display:inline-flex;align-items:center;gap:10px;background:none;border:1px solid var(--mist);border-radius:999px;padding:9px 16px 9px 14px;font:600 .95rem var(--display);color:var(--ink);cursor:pointer}
+  .menu-icon,.menu-icon::before,.menu-icon::after{display:block;width:16px;height:2px;background:var(--ink);border-radius:2px;transition:transform .2s}
+  .menu-icon{position:relative}
+  .menu-icon::before,.menu-icon::after{content:"";position:absolute;left:0}
+  .menu-icon::before{top:-5px}.menu-icon::after{top:5px}
+  .menu-btn[aria-expanded="true"] .menu-icon{background:transparent}
+  .menu-btn[aria-expanded="true"] .menu-icon::before{transform:translateY(5px) rotate(45deg)}
+  .menu-btn[aria-expanded="true"] .menu-icon::after{transform:translateY(-5px) rotate(-45deg)}
+  .bar nav{display:none;position:absolute;top:100%;left:0;right:0;z-index:20;flex-direction:column;align-items:stretch;gap:0;background:var(--card);border:1px solid var(--mist);border-radius:16px;padding:8px;box-shadow:0 18px 40px -18px rgba(28,22,48,.35)}
+  .bar nav.open{display:flex}
+  .bar nav a{display:block;padding:14px;border-radius:10px;font-size:1.05rem;color:var(--ink)}
+  .bar nav a:hover,.bar nav a:focus-visible{background:var(--paper)}
+  .bar nav a.talk{border-bottom:0}
+  .bar nav a.cv{margin:4px 0 0;padding:12px 14px;text-align:center;border-width:2px}
+}
+@media (max-width:640px){.wrap{padding:0 20px}}
+@media (max-width:360px){.mark{font-size:.95rem;white-space:nowrap;gap:8px}.mark i{width:30px;height:30px}.menu-btn{padding:8px 12px}}
+
+/* blog index */
+.blog-head{padding:36px 0 44px;max-width:900px}
+.kick{font-size:.86rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--plum)}
+.blog-head h1{font-size:clamp(2.5rem,5.6vw,4.4rem);font-weight:800;font-variation-settings:"wdth" 88,"opsz" 96;letter-spacing:-.025em;line-height:.98;margin:14px 0 20px}
+.blog-head p{font-family:var(--serif);font-size:1.28rem;line-height:1.55;color:var(--body);max-width:36em}
+.blog-head p.kick{font-family:var(--display);font-size:.86rem;line-height:1.5;color:var(--plum)}
+.posts{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;padding-bottom:88px}
+.posts li{background:var(--card);border-radius:20px;padding:28px 30px 26px;display:flex;flex-direction:column;position:relative;transition:box-shadow .2s,transform .2s}
+.posts li:hover{box-shadow:0 22px 44px -26px rgba(28,22,48,.4);transform:translateY(-2px)}
+.posts .num{font-size:.86rem;font-weight:700;color:var(--plum);letter-spacing:.06em}
+.posts h2{font-size:1.42rem;line-height:1.2;font-weight:700;letter-spacing:-.012em;margin:10px 0 12px}
+.posts h2 a{text-decoration:none}
+.posts h2 a::after{content:"";position:absolute;inset:0;border-radius:20px}
+.posts p{font-family:var(--serif);font-size:1.08rem;line-height:1.55;color:var(--body);margin-bottom:18px}
+.posts .meta{margin-top:auto;font-size:.9rem;color:var(--muted);display:flex;justify-content:space-between;gap:12px}
+.posts .meta b{color:var(--plum);font-weight:600}
+@media (max-width:860px){.posts{grid-template-columns:1fr}}
+
+/* article */
+.crumbs{font-size:.9rem;color:var(--muted);padding:8px 0 0}
+.crumbs a{text-decoration:none}.crumbs a:hover{color:var(--ink);text-decoration:underline}
+.crumbs span{margin:0 8px;color:#A49DB6}
+.post{max-width:780px;margin:0 auto;padding:30px 0 80px}
+.post header h1{font-size:clamp(2.1rem,4.6vw,3.3rem);font-weight:800;font-variation-settings:"wdth" 90,"opsz" 96;letter-spacing:-.022em;line-height:1.04;margin:14px 0 22px}
+.byline{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;font-size:.95rem;color:var(--muted);padding-bottom:26px;border-bottom:1px solid var(--mist)}
+.byline .av{width:44px;height:44px;border-radius:50%;background:var(--plum);color:#fff;display:grid;place-items:center;font-weight:700;font-size:.9rem;flex:none}
+.byline strong{color:var(--ink);font-weight:600;display:block}
+.byline .when{margin-left:auto;text-align:right}
+.answer{background:var(--ink);color:#E9E5F2;border-radius:18px;padding:24px 26px;margin:30px 0 22px}
+.answer h2{font-size:.84rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#F3B6C9;margin-bottom:10px}
+.answer p{font-family:var(--serif);font-size:1.2rem;line-height:1.55;color:#fff}
+.take{background:var(--card);border-radius:18px;padding:22px 26px 20px;margin-bottom:8px}
+.take h2{font-size:.84rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--plum);margin-bottom:10px}
+.take ul{list-style:none}
+.take li{position:relative;padding:7px 0 7px 22px;font-size:1.02rem;line-height:1.45}
+.take li::before{content:"";position:absolute;left:2px;top:16px;width:8px;height:8px;border-radius:50%;background:var(--plum)}
+.prose{font-family:var(--serif);font-size:1.22rem;line-height:1.68;color:var(--body)}
+.prose h2{font-family:var(--display);font-size:1.72rem;line-height:1.15;font-weight:700;letter-spacing:-.016em;color:var(--ink);margin:52px 0 16px;scroll-margin-top:20px}
+.prose h3{font-family:var(--display);font-size:1.22rem;line-height:1.25;font-weight:700;color:var(--ink);margin:32px 0 10px}
+.prose p{margin:0 0 20px}
+.prose ul,.prose ol{margin:0 0 22px 1.25em}
+.prose li{margin-bottom:9px;padding-left:4px}
+.prose li::marker{color:var(--plum);font-family:var(--display);font-weight:700}
+.prose strong{font-weight:600;color:var(--ink)}
+.prose a{color:var(--cobalt);text-decoration:underline;text-underline-offset:3px}
+.prose a:hover{color:var(--plum)}
+.prose blockquote{border-left:4px solid var(--plum);padding:4px 0 4px 20px;margin:0 0 22px;font-style:italic;color:var(--ink)}
+.prose code{font-family:ui-monospace,Menlo,monospace;font-size:.86em;background:#E8E3EF;border-radius:5px;padding:2px 6px}
+.tbl{overflow-x:auto;margin:0 0 26px;border-radius:14px;background:var(--card)}
+.prose table{border-collapse:collapse;width:100%;font-family:var(--display);font-size:.98rem;line-height:1.45;min-width:520px}
+.prose th{text-align:left;background:var(--ink);color:#fff;font-weight:600;padding:12px 16px}
+.prose td{padding:12px 16px;border-top:1px solid var(--mist);vertical-align:top;color:var(--ink)}
+
+/* architecture figure */
+.arch{background:var(--card);border-radius:20px;padding:24px 24px 18px;margin:34px 0 34px;font-family:var(--display)}
+.arch-title{font-size:.84rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--plum);margin-bottom:16px}
+.arch-body{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.arch-body.has-rail{grid-template-columns:minmax(0,1fr) 132px}
+.layers{display:flex;flex-direction:column}
+.layer{border:1.5px solid var(--mist);border-radius:14px;padding:12px 14px 14px;background:#FAF8FC}
+.layer.dark{background:var(--ink);border-color:var(--ink)}
+.layer.plum{background:#F6EAEF;border-color:#E3C3D0}
+.layer-name{font-size:.8rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+.layer.dark .layer-name{color:#F3B6C9}
+.layer.plum .layer-name{color:var(--plum)}
+.boxes{display:flex;flex-wrap:wrap;gap:8px}
+.box{flex:1 1 130px;background:var(--card);border:1.5px solid var(--mist);border-radius:10px;padding:9px 12px;font-size:.93rem;font-weight:600;line-height:1.25;color:var(--ink)}
+.box small{display:block;font-weight:400;font-size:.82rem;color:var(--muted);margin-top:3px;line-height:1.3}
+.layer.dark .box{background:#2A2342;border-color:#3D3559;color:#fff}
+.layer.dark .box small{color:#C9C3DA}
+.layer.plum .box{border-color:#E3C3D0}
+.down{height:26px;position:relative}
+.down::before{content:"";position:absolute;left:50%;top:3px;bottom:9px;width:2px;background:var(--plum);transform:translateX(-50%)}
+.down::after{content:"";position:absolute;left:50%;bottom:3px;border:6px solid transparent;border-top:8px solid var(--plum);border-bottom:0;transform:translateX(-50%)}
+.down.both::before{top:9px}
+.down.both i{position:absolute;left:50%;top:3px;border:6px solid transparent;border-bottom:8px solid var(--plum);border-top:0;transform:translateX(-50%)}
+.rail{background:var(--plum);color:#fff;border-radius:14px;padding:14px 12px;font-size:.9rem;font-weight:600;line-height:1.3;display:flex;flex-direction:column;justify-content:center;gap:10px;text-align:center}
+.rail small{display:block;font-weight:400;font-size:.8rem;color:#F3DCE5;line-height:1.35}
+.arch figcaption{font-family:var(--serif);font-size:1rem;line-height:1.5;color:var(--muted);margin-top:14px}
+.flow{display:flex;gap:0;align-items:stretch}
+.flow .step{flex:1 1 0;min-width:0;border:1.5px solid var(--mist);border-radius:12px;background:#FAF8FC;padding:11px 12px 12px;font-size:.93rem;font-weight:600;line-height:1.25}
+.flow .step b{display:block;font-size:.76rem;font-weight:700;color:var(--plum);letter-spacing:.05em;margin-bottom:4px}
+.flow .step small{display:block;font-weight:400;font-size:.82rem;color:var(--muted);margin-top:4px;line-height:1.3}
+.flow .step.dark{background:var(--ink);border-color:var(--ink);color:#fff}
+.flow .step.dark b{color:#F3B6C9}.flow .step.dark small{color:#C9C3DA}
+.flow .step.plum{background:#F6EAEF;border-color:#E3C3D0}
+.flow .arrow{flex:none;width:22px;position:relative}
+.flow .arrow::before{content:"";position:absolute;top:50%;left:2px;right:8px;height:2px;background:var(--plum);transform:translateY(-50%)}
+.flow .arrow::after{content:"";position:absolute;top:50%;right:2px;border:6px solid transparent;border-left:8px solid var(--plum);border-right:0;transform:translateY(-50%)}
+.loop{margin-top:10px;border:1.5px dashed #C9A3B3;border-radius:12px;padding:9px 14px;font-size:.9rem;color:var(--plum);font-weight:600;text-align:center;background:#FBF4F7}
+@media (max-width:700px){
+  .arch{padding:18px 16px 14px}
+  .arch-body.has-rail{grid-template-columns:1fr}
+  .rail{flex-direction:row;flex-wrap:wrap;justify-content:flex-start;text-align:left;gap:4px 14px}
+  .flow{flex-direction:column}
+  .flow .arrow{width:auto;height:22px}
+  .flow .arrow::before{top:2px;bottom:8px;left:50%;right:auto;width:2px;height:auto;transform:translateX(-50%)}
+  .flow .arrow::after{top:auto;bottom:2px;right:auto;left:50%;border:6px solid transparent;border-top:8px solid var(--plum);border-bottom:0;transform:translateX(-50%)}
+  .box{flex-basis:120px}
+}
+
+/* faq, author, cta */
+.faq{margin-top:56px}
+.faq>h2{font-size:1.72rem;font-weight:700;letter-spacing:-.016em;margin-bottom:8px}
+.faq-item{border-top:1px solid var(--mist);padding:20px 0 4px}
+.faq-item h3{font-size:1.14rem;font-weight:700;line-height:1.3;margin-bottom:8px}
+.faq-item p{font-family:var(--serif);font-size:1.14rem;line-height:1.62;color:var(--body);margin-bottom:16px}
+.cta{background:var(--plum);color:#fff;border-radius:24px;padding:36px 36px 34px;margin-top:56px}
+.cta .who{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.cta .av{width:52px;height:52px;border-radius:50%;background:#fff;color:var(--plum);display:grid;place-items:center;font-weight:800;flex:none}
+.cta .who strong{display:block;font-size:1.08rem}
+.cta .who span{font-size:.95rem;color:#F3DCE5}
+.cta h2{font-size:clamp(1.7rem,3.6vw,2.4rem);font-weight:800;font-variation-settings:"wdth" 90;letter-spacing:-.02em;line-height:1.06;margin-bottom:12px}
+.cta p{font-family:var(--serif);font-size:1.16rem;line-height:1.55;color:#F3DCE5;max-width:34em}
+.cta-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.btn-light{display:inline-block;background:#fff;color:var(--plum);font-weight:700;padding:14px 26px;border-radius:999px;text-decoration:none}
+.btn-light:hover{background:#F7EEF2}
+.btn-line{display:inline-block;border:2px solid rgba(255,255,255,.55);color:#fff;font-weight:600;padding:12px 22px;border-radius:999px;text-decoration:none}
+.btn-line:hover{border-color:#fff}
+.more{margin-top:56px}
+.more h2{font-size:1.3rem;font-weight:700;margin-bottom:14px}
+.more ul{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.more a{display:block;height:100%;background:var(--card);border-radius:16px;padding:18px 20px;text-decoration:none;font-weight:600;line-height:1.3}
+.more a small{display:block;font-weight:700;font-size:.78rem;letter-spacing:.07em;text-transform:uppercase;color:var(--plum);margin-bottom:6px}
+.more a:hover{box-shadow:0 16px 32px -22px rgba(28,22,48,.45)}
+.site-foot{border-top:1px solid var(--mist);padding:26px 0 34px;font-size:.92rem;color:var(--muted);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+.site-foot a{color:var(--ink)}
+@media (max-width:640px){
+  .post{padding-top:18px}
+  .prose{font-size:1.14rem}
+  .prose h2{font-size:1.46rem;margin-top:42px}
+  .byline .when{margin-left:0;text-align:left;flex-basis:100%}
+  .cta{padding:28px 22px;border-radius:20px}
+  .cta-actions a{width:100%;text-align:center}
+  .more ul{grid-template-columns:1fr}
+  .answer{padding:20px}.take{padding:18px 20px}
+}
+</style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Can Your AI Agent Survive a Five-Day Task? Engineering Long-Running Autonomous Agent Execution", "description": "Most AI agents fail when a task outlives one session. How I engineer long-running autonomous agents with durable execution, safe retries and human approval.", "datePublished": "2026-11-20", "dateModified": "2026-11-20", "author": {"@type": "Person", "name": "Gangadevi Jeyaraj", "jobTitle": "Senior Agentic AI Engineer, Chief Product Officer at Enthiram.ai", "email": "mailto:ganga@enthiram.ai", "sameAs": ["https://www.linkedin.com/in/gangadevijeyaraj/", "https://github.com/gangadeviai/"], "knowsAbout": ["Agentic AI", "Multi-agent systems", "Context engineering", "LLMOps", "Enterprise AI architecture"]}, "publisher": {"@type": "Person", "name": "Gangadevi Jeyaraj", "jobTitle": "Senior Agentic AI Engineer, Chief Product Officer at Enthiram.ai", "email": "mailto:ganga@enthiram.ai", "sameAs": ["https://www.linkedin.com/in/gangadevijeyaraj/", "https://github.com/gangadeviai/"], "knowsAbout": ["Agentic AI", "Multi-agent systems", "Context engineering", "LLMOps", "Enterprise AI architecture"]}, "inLanguage": "en", "wordCount": 1514, "keywords": "long-running AI agents, durable execution, Temporal, autonomous agents, agent orchestration, idempotency, human-in-the-loop, enterprise workflow automation", "articleSection": "Long-Running Autonomous Agent Execution", "mainEntityOfPage": "blog/long-running-autonomous-agent-execution.html", "abstract": "A long-running agent needs its progress stored outside the model and outside the process. I run the agent as a durable workflow: every step is recorded, any failure resumes from the last completed step, actions are idempotent so retries are safe, and waits for people or other systems cost nothing. The context window is rebuilt for each step from that stored state."}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is a long-running AI agent?", "acceptedAnswer": {"@type": "Answer", "text": "It is an agent that works on a task for hours, days or weeks, across restarts, waits for people and other systems, and many tool calls. Examples include claim handling, procurement and compliance reviews."}}, {"@type": "Question", "name": "What is durable execution for AI agents?", "acceptedAnswer": {"@type": "Answer", "text": "Durable execution records every step of a workflow and its result. If a process crashes or is redeployed, the run resumes from the last completed step. Engines such as Temporal provide this."}}, {"@type": "Question", "name": "How do you stop an agent from repeating an action after a retry?", "acceptedAnswer": {"@type": "Answer", "text": "Attach an idempotency key to every call that changes something, so the receiving system ignores repeats. Where that is not possible, check the current state first and act only if the change has not happened."}}, {"@type": "Question", "name": "How do long-running agents handle human approval?", "acceptedAnswer": {"@type": "Answer", "text": "The workflow stores a wait and stops. An approval arrives as a signal and the workflow continues from that point. A timer escalates the request if nobody responds in time."}}, {"@type": "Question", "name": "Should I use LangGraph or Temporal for long-running agents?", "acceptedAnswer": {"@type": "Answer", "text": "They solve different problems and work well together. LangGraph structures the agent's reasoning and tool use. Temporal provides durable execution, timers, retries and versioning for the process around it."}}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "index.html"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "blog/index.html"}, {"@type": "ListItem", "position": 3, "name": "Can Your AI Agent Survive a Five-Day Task? Engineering Long-Running Autonomous Agent Execution", "item": "blog/long-running-autonomous-agent-execution.html"}]}</script>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="mark" href="../index.html"><i>GJ</i>Gangadevi Jeyaraj</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="main-nav"><span class="menu-icon" aria-hidden="true"></span><span class="menu-label">Menu</span></button>
+    <nav aria-label="Main" id="main-nav">
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#projects">Projects</a>
+      <a href="../index.html#research">Research</a>
+      <a href="index.html" aria-current="page">Blog</a>
+      <a class="cv" href="../assets/Gangadevi-Jeyaraj-CV.pdf" download>Download CV</a>
+      <a class="talk" href="../index.html#contact">Hire me</a>
+    </nav>
+  </header>
+</div>
+<main class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="../index.html">Home</a><span>/</span><a href="index.html">Blog</a><span>/</span>Long-Running Autonomous Agent Execution</nav>
+  <article class="post">
+    <header>
+      <p class="kick">Long-Running Autonomous Agent Execution</p>
+      <h1>Can Your AI Agent Survive a Five-Day Task? Engineering Long-Running Autonomous Agent Execution</h1>
+      <div class="byline">
+        <div class="av" aria-hidden="true">GJ</div>
+        <div><strong>By Gangadevi Jeyaraj</strong>Senior Agentic AI Engineer · CPO, Enthiram.ai · 15 years in AI</div>
+        <div class="when"><time datetime="2026-11-20">20 November 2026</time> · 7 min read</div>
+      </div>
+    </header>
+    <section class="answer" aria-label="Short answer"><h2>The short answer</h2><p>A long-running agent needs its progress stored outside the model and outside the process. I run the agent as a durable workflow: every step is recorded, any failure resumes from the last completed step, actions are idempotent so retries are safe, and waits for people or other systems cost nothing. The context window is rebuilt for each step from that stored state.</p></section>
+    <section class="take" aria-label="Key takeaways"><h2>Key takeaways</h2><ul><li>An agent that keeps its state in memory or in the chat history will lose work the first time something restarts.</li><li>Durable execution turns a crash into a pause. The run continues from the last completed step.</li><li>Every tool call that changes something needs an idempotency key, or a retry will pay twice.</li><li>Set budgets for steps, tokens and elapsed time, and decide in advance when the agent must hand over to a person.</li></ul></section>
+    <div class="prose">
+<p>A demo agent finishes in ninety seconds. A real insurance claim exception takes days. The agent asks the customer for a missing document and waits. It asks an adjuster to approve a payout and waits again. In between, the service is redeployed twice, a model endpoint has a bad hour, and a rate limit is hit.</p>
+<p>I built the claims-exception agent at Enthiram.ai for exactly this kind of work. It brought each case from about 14 days to about 3.5 hours of handling time. Most of the engineering effort did not go into prompts. It went into making sure the agent could be interrupted at any moment and carry on correctly.</p>
+<h2>Why do agents fail on long tasks?</h2>
+<p>The causes are ordinary, which is why they are overlooked in pilots.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>What happens</th>
+<th>Agent with in-memory state</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The process restarts during a deploy</td>
+<td>State is gone</td>
+<td>Case starts again or is abandoned</td>
+</tr>
+<tr>
+<td>A tool call times out</td>
+<td>Agent retries blindly</td>
+<td>Duplicate payment or duplicate email</td>
+</tr>
+<tr>
+<td>A human takes two days to approve</td>
+<td>Session expires</td>
+<td>Approval arrives to nothing</td>
+</tr>
+<tr>
+<td>The model API fails mid-run</td>
+<td>Exception</td>
+<td>Half-finished case, unknown status</td>
+</tr>
+<tr>
+<td>The conversation grows for days</td>
+<td>Context fills with old tool output</td>
+<td>Rules and goals get lost</td>
+</tr>
+<tr>
+<td>The agent loops on a hard case</td>
+<td>No limit</td>
+<td>A large bill and no outcome</td>
+</tr>
+</tbody>
+</table></div>
+<p>None of these is an AI problem. They are distributed systems problems that agents inherit the moment a task outlives one request.</p>
+<h2>What is durable execution, and why do I use it?</h2>
+<p>Durable execution means the engine running your workflow saves every step and its result as it happens. If the process dies, another worker loads that history and continues from the next step. To the code, the crash never occurred.</p>
+<p>I use Temporal for this. The split is simple and it matters:</p>
+<ul>
+<li><strong>The workflow</strong> is the long-lived logic of the case. It holds the plan, the state and the waits. It contains no direct calls to the outside world.</li>
+<li><strong>Activities</strong> are the individual actions: call the model, query the policy system, send an email, request a payment. Each one has a timeout and a retry policy.</li>
+</ul>
+<p>A LangGraph agent does the reasoning inside an activity. Temporal owns the lifetime of the case. The agent stays flexible and the process around it stays predictable.</p>
+<figure class="arch" role="group" aria-label="One step of a long-running agent, repeated for days">
+<div class="arch-title">One step of a long-running agent, repeated for days</div>
+<div class="flow"><div class="step plum"><b>1 PLAN</b>Agent decides<small>context rebuilt from stored state</small></div><div class="arrow" aria-hidden="true"></div><div class="step "><b>2 ACT</b>Tool call<small>idempotency key, gate, timeout</small></div><div class="arrow" aria-hidden="true"></div><div class="step "><b>3 WAIT</b>Timer or signal<small>approval, reply, document</small></div><div class="arrow" aria-hidden="true"></div><div class="step "><b>4 VERIFY</b>Check result<small>did the system of record change?</small></div><div class="arrow" aria-hidden="true"></div><div class="step dark"><b>5 RECORD</b>Durable history<small>step saved, budgets updated</small></div></div>
+<div class="loop">Loop until the goal is met, a budget is reached, or a person takes over. Crash, deploy or outage: resume at the last recorded step.</div>
+<figcaption>The workflow engine records each step before moving on. Waiting for an approval or a third party is a stored timer, and a failure at any point resumes from the last recorded step.</figcaption></figure>
+<h2>How do you make retries safe?</h2>
+<p>Networks fail after the work has been done and before the confirmation arrives. The engine cannot tell the difference, so it retries. If the action was "pay the claimant", you have paid twice.</p>
+<p>The fix is an idempotency key on every call that changes something. I derive it from the case ID and the step number. The payment service sees the same key a second time and returns the original result without acting again. Where a downstream system cannot honour a key, I check its state first and act only if the change is missing.</p>
+<p>For multi-step changes I define a compensation for each step, following the saga pattern. If step four fails for good, the workflow reverses steps three, two and one in order: release the reserve, cancel the notification, reopen the task.</p>
+<h2>How does an agent wait for days without wasting resources?</h2>
+<p>In a durable workflow, waiting is a stored timer or a signal. No process sits idle and no session stays open.</p>
+<p>When the claims agent needs an adjuster's approval, the workflow records "waiting for approval on case 4471, escalate after 24 hours" and stops. When the adjuster clicks approve, a signal wakes the workflow at that line. If nobody responds, the timer fires and the case goes to a supervisor. The same pattern handles a customer who uploads a document three days later.</p>
+<p>This is also where human oversight sits. I decide per action, in advance, which ones the agent may take alone and which ones need a signature. High-value payouts and anything irreversible wait for a person.</p>
+<h2>What goes into the context window on day four?</h2>
+<p>Not the whole history. A transcript of four days of tool calls would bury the goal and the rules under old output.</p>
+<p>I treat the workflow state as the source of truth and rebuild the context for each step from it: the goal, the applicable rules, a short summary of what has been done, the open items, and the fresh data for this step. Old tool output stays in the history where it can be audited, and out of the prompt.</p>
+<p>This design is what led me to study rule decay in long runs in detail. I wrote that up in <a href="context-rot-context-engineering-multi-agent-systems.html">context rot and context engineering</a>.</p>
+<h2>Which limits should every long-running agent have?</h2>
+<p>An autonomous agent without budgets is an open commitment. I set these on every workflow.</p>
+<ul>
+<li><strong>Step budget.</strong> A maximum number of plan and act cycles per case.</li>
+<li><strong>Token and cost budget.</strong> A ceiling per case, with a warning at 70%.</li>
+<li><strong>Time budget.</strong> A deadline for the whole case and for each wait.</li>
+<li><strong>Repeat detection.</strong> The same tool called with the same arguments three times means the agent is stuck.</li>
+<li><strong>A kill switch.</strong> Operations can pause one case, one workflow type or everything, and resume later without loss.</li>
+</ul>
+<p>When a budget is reached the agent does not fail. It packages what it knows and hands the case to a person with a clear summary.</p>
+<h2>How do you change the agent while cases are in flight?</h2>
+<p>On any given day, hundreds of cases are part-way through. A new prompt, a new tool or a new model version must not corrupt them.</p>
+<p>I version workflows so that running cases finish on the logic they started with and new cases take the new version. Model upgrades go to a small share of new cases first, with evaluation on the results before the rest follow. I describe that gate in <a href="agent-observability-continuous-evaluation.html">agent observability and continuous evaluation</a>.</p>
+<h2>What would I do in your first 30 days?</h2>
+<ul>
+<li><strong>Week 1.</strong> Choose one process that takes days and has clear waits. Draw its steps and mark which ones change external systems.</li>
+<li><strong>Week 2.</strong> Implement it as a durable workflow with the agent in activities. Add idempotency keys to every write.</li>
+<li><strong>Week 3.</strong> Add approvals as signals, escalation timers and budgets.</li>
+<li><strong>Week 4.</strong> Test failure on purpose: stop workers mid-case, fail the model endpoint, replay duplicates. Go live only when every test resumes cleanly.</li>
+</ul>
+<h2>What changes in 2027?</h2>
+<p>Runs are stretching from days to weeks, and they are crossing company boundaries as agents hand work to suppliers' and partners' agents. Durable state will have to be shared across organisations, with agreement on who owns a task at each moment. Model versions will also change during a single run more often, so pinning and replay will become routine. The teams that already treat an agent run as a durable, versioned process will find this a small step.</p>
+    </div>
+    <section class="faq" aria-labelledby="faq-title"><h2 id="faq-title">Frequently asked questions</h2><div class="faq-item"><h3>What is a long-running AI agent?</h3><p>It is an agent that works on a task for hours, days or weeks, across restarts, waits for people and other systems, and many tool calls. Examples include claim handling, procurement and compliance reviews.</p></div><div class="faq-item"><h3>What is durable execution for AI agents?</h3><p>Durable execution records every step of a workflow and its result. If a process crashes or is redeployed, the run resumes from the last completed step. Engines such as Temporal provide this.</p></div><div class="faq-item"><h3>How do you stop an agent from repeating an action after a retry?</h3><p>Attach an idempotency key to every call that changes something, so the receiving system ignores repeats. Where that is not possible, check the current state first and act only if the change has not happened.</p></div><div class="faq-item"><h3>How do long-running agents handle human approval?</h3><p>The workflow stores a wait and stops. An approval arrives as a signal and the workflow continues from that point. A timer escalates the request if nobody responds in time.</p></div><div class="faq-item"><h3>Should I use LangGraph or Temporal for long-running agents?</h3><p>They solve different problems and work well together. LangGraph structures the agent&#x27;s reasoning and tool use. Temporal provides durable execution, timers, retries and versioning for the process around it.</p></div></section>
+    <aside class="cta" aria-label="Hire Gangadevi Jeyaraj">
+      <div class="who"><div class="av" aria-hidden="true">GJ</div><div><strong>Gangadevi Jeyaraj</strong><span>Senior Agentic AI Engineer · CPO, Enthiram.ai · Open to remote</span></div></div>
+      <h2>Do your agents lose the thread after the first hour?</h2>
+      <p>I built an agent that carries insurance cases across days of waits, approvals and failures, and cut handling from 14 days to 3.5 hours. If you need that reliability in your enterprise, I am open to senior roles.</p>
+      <div class="cta-actions">
+        <a class="btn-light" href="../index.html#contact">Hire me</a>
+        <a class="btn-line" href="mailto:ganga@enthiram.ai?subject=Long-Running%20Autonomous%20Agent%20Execution">Email ganga@enthiram.ai</a>
+        <a class="btn-line" href="https://www.linkedin.com/in/gangadevijeyaraj/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </aside>
+    <nav class="more" aria-label="More articles"><h2>Keep reading</h2><ul><li><a href="enterprise-agentic-chat-conversational-intelligence.html"><small>Enterprise Agentic Chat &amp; Conversational Intelligence</small>Your Enterprise Chatbot Answers Questions. Your Staff Need It to Finish the Task.</a></li><li><a href="agent-memory-architecture-memory-management.html"><small>Agent Memory Architecture &amp; Memory Management</small>Why Does Your AI Agent Remember the Wrong Things? A Practical Agent Memory Architecture</a></li><li><a href="a2a-multi-agent-interoperability-coordination.html"><small>A2A, Multi-Agent Interoperability &amp; Coordination</small>Your AI Agents Come from Five Vendors and Cannot Work Together: A2A, MCP and Multi-Agent Coordination</a></li><li><a href="agent-observability-continuous-evaluation.html"><small>Agent Observability &amp; Continuous Evaluation</small>If You Cannot See What Your AI Agent Did, You Cannot Trust It: Agent Observability and Continuous Evaluation</a></li></ul></nav>
+  </article>
+</main>
+<div class="wrap">
+  <footer class="site-foot">
+    <span>© 2026 Gangadevi Jeyaraj · Senior Agentic AI Engineer · <a href="mailto:ganga@enthiram.ai">ganga@enthiram.ai</a></span>
+    <span><a href="../index.html">Portfolio</a> · <a href="https://www.linkedin.com/in/gangadevijeyaraj/" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://github.com/gangadeviai/" target="_blank" rel="noopener">GitHub</a></span>
+  </footer>
+</div><script>
+(()=>{const mb=document.querySelector('.menu-btn'),nav=document.getElementById('main-nav');
+const set=o=>{mb.setAttribute('aria-expanded',o);nav.classList.toggle('open',o)};
+mb.addEventListener('click',()=>set(mb.getAttribute('aria-expanded')!=='true'));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&nav.classList.contains('open')){set(false);mb.focus()}});
+document.addEventListener('click',e=>{if(nav.classList.contains('open')&&!e.target.closest('.bar'))set(false)});})();
+</script>
+</body>
+</html>
