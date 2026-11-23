@@ -309,6 +309,14 @@ a{color:inherit}
 .proj.wide{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);column-gap:48px;align-items:end}
 .proj.wide .wide-r .results{margin-top:0}
 @media (max-width:960px){.proj.wide{grid-template-columns:1fr}.proj.wide .wide-r{margin-top:6px}}
+.proj.wide.research-card{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);column-gap:48px;align-items:start}
+.research-card .results{margin-top:14px}
+.research-fig{margin:0;min-width:0;display:flex;flex-direction:column;align-items:center}
+.research-fig a{display:inline-block;max-width:100%;border-radius:8px;overflow:hidden;background:#fff;border:1px solid var(--mist);box-shadow:0 22px 48px -24px rgba(28,22,48,.6);transition:box-shadow .2s,transform .2s}
+.research-fig a:hover{box-shadow:0 28px 56px -22px rgba(28,22,48,.62);transform:translateY(-3px)}
+.research-fig img{display:block;width:auto;max-width:100%;max-height:540px;height:auto}
+.research-fig figcaption{align-self:stretch;margin-top:14px;font-size:.86rem;line-height:1.5;color:var(--muted);text-align:center}
+@media (max-width:960px){.proj.wide.research-card{grid-template-columns:1fr}.research-fig{margin-top:24px}.research-fig img{max-height:none}}
 
 .cf{background:#FFFBEA;color:#5A4500;padding:0 4px;border:1px dashed #C9A227;border-radius:4px;font-weight:inherit}
 .ph{background:#FFF4C2;color:#5A4500;padding:0 4px;border-radius:3px}
@@ -760,17 +768,20 @@ a{color:inherit}
       </div>
 
       <div class="proj-grid">
-        <article class="proj wide">
+        <article class="proj wide research-card">
           <div class="wide-l">
             <h3>Charter Coherence Protocol: Eliminating Context Rot in Long-Running Autonomous Multi-Agent Enterprise Systems</h3>
             <p class="kind">Published research paper, lead author</p>
             <p class="org-line">International Journal of Advanced Research in Science and Technology, Vol. 15, Issue 09, 2026</p>
             <p class="what">When AI agents run for days, the policy rules that govern them fade. The paper names this decay context rot and presents the Charter Coherence Protocol (CCP), which keeps those rules in force and checks every tool call against them, without changing the model or the orchestration framework.</p>
-          </div>
-          <div class="wide-r">
             <p class="results"><b>60–79% → 0</b> rule violations executed at tools, in every scenario tested</p>
             <p class="stack"><a class="paper-link" href="https://www.ijarst.com/pdf/564/charter-coherence-protocol-eliminating-context-rot-in-long-running-autonomous-mu.pdf" target="_blank" rel="noopener">Read the paper (PDF)</a> &nbsp;·&nbsp; <a class="paper-link" href="https://doi.org/10.62226/ijarst20260929" target="_blank" rel="noopener">DOI: 10.62226/ijarst20260929</a></p>
           </div>
+          <figure class="wide-r research-fig">
+            <a href="https://www.ijarst.com/pdf/564/charter-coherence-protocol-eliminating-context-rot-in-long-running-autonomous-mu.pdf" target="_blank" rel="noopener" aria-label="Open the full CCP paper (PDF)">
+              <img src="assets/ccp-paper-page1.jpg" width="840" height="1241" alt="First page of the published paper, Charter Coherence Protocol, by Gangadevi Jeyaraj et al. in the International Journal of Advanced Research in Science and Technology, Volume 15, Issue 09, 2026." loading="lazy">
+            </a>
+          </figure>
         </article>
       </div>
     </div>
